@@ -10,6 +10,7 @@ import (
 	"net/url"
 	"os"
 	"os/signal"
+	"strconv"
 	"syscall"
 
 	"github.com/chromedp/cdproto"
@@ -82,7 +83,7 @@ func run() error {
 		return configure()
 	}
 
-	tenantID, appID, err := getProfileConfig(profileName)
+	tenantID, appID, durationHours, err := getProfileConfig(profileName)
 	if err != nil {
 		return errors.Wrap(err, "Failed to get config parameters")
 	}
@@ -152,7 +153,7 @@ func run() error {
 				if !ok || len(samlResponse) == 0 {
 					return errors.Wrap(err, "No such key: SAMLResponse")
 				}
-				err = assumeRole(ctx, samlResponse[0])
+				err = assumeRole(ctx, samlResponse[0], durationHours)
 				if err != nil {
 					return errors.Wrap(err, "Faled to assume role")
 				}
@@ -176,13 +177,13 @@ func run() error {
 	return nil
 }
 
-func assumeRole(ctx context.Context, assertion string) error {
+func assumeRole(ctx context.Context, assertion string, durationHours int) error {
 	roleArn, principalArn, err := parseArn(assertion)
 	if err != nil {
 		return errors.Wrap(err, "Failed to parse arn from SAML response")
 	}
 
-	credentials, err := assumeRoleWithSAML(ctx, roleArn, principalArn, assertion)
+	credentials, err := assumeRoleWithSAML(ctx, roleArn, principalArn, assertion, durationHours)
 	if err != nil {
 		return errors.Wrap(err, "Failed to assume role with SAML")
 	}
@@ -198,7 +199,11 @@ func configure() error {
 	if err != nil {
 		return errors.Wrap(err, "Failed to get Azure App ID URI")
 	}
-	return setProfileConfig(profileName, tenantID, appID)
+	durationHours, err := promptInt("Session Duration Hours (up to 12): ")
+	if err != nil {
+		return errors.Wrap(err, "Failed to get Azure App ID URI")
+	}
+	return setProfileConfig(profileName, tenantID, appID, durationHours)
 }
 
 func prompt(q string) (string, error) {
@@ -210,4 +215,24 @@ func prompt(q string) (string, error) {
 		return "", errors.Wrap(err, "Failed to parse user input")
 	}
 	return answer, nil
+}
+
+func promptInt(q string) (num int, err error) {
+	scanner := bufio.NewScanner(os.Stdin)
+	fmt.Print(q)
+	for scanner.Scan() {
+		answer := scanner.Text()
+		num, err = strconv.Atoi(answer)
+		if err != nil {
+			fmt.Println("Enter number")
+			fmt.Print(q)
+			continue
+		}
+
+		if err := scanner.Err(); err != nil {
+			return -1, errors.Wrap(err, "Failed to parse user input")
+		}
+		break
+	}
+	return num, nil
 }

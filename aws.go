@@ -13,12 +13,12 @@ import (
 	"github.com/pkg/errors"
 )
 
-func assumeRoleWithSAML(ctx context.Context, roleArn, principalArn, assertion string) (*sts.Credentials, error) {
+func assumeRoleWithSAML(ctx context.Context, roleArn, principalArn, assertion string, durationHours int) (*sts.Credentials, error) {
 	sess := session.Must(session.NewSession())
 	svc := sts.New(sess)
 
 	input := &sts.AssumeRoleWithSAMLInput{
-		DurationSeconds: aws.Int64(1 * 60 * 60),
+		DurationSeconds: aws.Int64(int64(durationHours) * 60 * 60),
 		RoleArn:         aws.String(roleArn),
 		PrincipalArn:    aws.String(principalArn),
 		SAMLAssertion:   aws.String(assertion),
@@ -30,24 +30,25 @@ func assumeRoleWithSAML(ctx context.Context, roleArn, principalArn, assertion st
 	return res.Credentials, nil
 }
 
-func getProfileConfig(profileName string) (tenantID, appID string, err error) {
+func getProfileConfig(profileName string) (tenantID, appID string, durationHours int, err error) {
 	configFile, err := getAWSConfigFilePath("config")
 	if err != nil {
-		return "", "", errors.Wrapf(err, "Failed to get AWS config file path")
+		return "", "", -1, errors.Wrapf(err, "Failed to get AWS config file path")
 	}
 	cfg, err := ini.Load(configFile)
 	if err != nil {
-		return "", "", errors.Wrapf(err, "Failed to read file: %s", configFile)
+		return "", "", -1, errors.Wrapf(err, "Failed to read file: %s", configFile)
 	}
 	if profileName != "default" {
 		profileName = fmt.Sprintf("profile %s", profileName)
 	}
 	tenantID = cfg.Section(profileName).Key("azure_tenant_id").MustString("")
 	appID = cfg.Section(profileName).Key("azure_app_id").MustString("")
-	return tenantID, appID, nil
+	durationHours = cfg.Section(profileName).Key("azure_duration_hours").MustInt(1)
+	return tenantID, appID, durationHours, nil
 }
 
-func setProfileConfig(profileName string, tenantID, appID string) error {
+func setProfileConfig(profileName string, tenantID, appID string, durationHours int) error {
 	configFile, err := getAWSConfigFilePath("config")
 	if err != nil {
 		return errors.Wrapf(err, "Failed to get AWS config file path")
@@ -61,6 +62,7 @@ func setProfileConfig(profileName string, tenantID, appID string) error {
 	}
 	cfg.Section(profileName).Key("azure_tenant_id").SetValue(tenantID)
 	cfg.Section(profileName).Key("azure_app_id").SetValue(appID)
+	cfg.Section(profileName).Key("azure_duration_hours").SetValue(fmt.Sprint(durationHours))
 	return cfg.SaveTo(configFile)
 }
 
