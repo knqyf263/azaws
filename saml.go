@@ -47,7 +47,7 @@ func parseArn(assertion string) (roleArn, principalArn string, err error) {
 	}
 
 	for _, attribute := range response.Assertion.AttributeStatement.Attributes {
-		if attribute.Name != "http://schemas.microsoft.com/ws/2008/06/identity/claims/role" {
+		if attribute.Name != "http://schemas.microsoft.com/ws/2008/06/identity/claims/role" && attribute.Name != "https://aws.amazon.com/SAML/Attributes/Role" {
 			continue
 		}
 		for _, v := range attribute.AttributeValues {
