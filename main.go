@@ -14,10 +14,8 @@ import (
 	"syscall"
 
 	"github.com/chromedp/cdproto"
-	"github.com/chromedp/cdproto/cdp"
 	"github.com/chromedp/cdproto/network"
 	"github.com/chromedp/chromedp"
-	"github.com/chromedp/chromedp/runner"
 	"github.com/pkg/errors"
 )
 
@@ -102,16 +100,13 @@ func run() error {
 	handleSignal(cancel)
 
 	// create chrome instance
-	c, err := chromedp.New(ctx,
-		chromedp.WithRunnerOptions(
-			runner.Flag("user-data-dir", userDataDir),
-			runner.Flag("disable-infobars", true)),
-		chromedp.WithLog(devToolHandler))
-	if err != nil {
-		return err
-	}
+	ctx, cancel = chromedp.NewExecAllocator(ctx, chromedp.Flag("user-data-dir", userDataDir), chromedp.Flag("disable-infobars", true))
+	defer cancel()
 
-	err = c.Run(ctx, network.Enable())
+	ctx, cancel = chromedp.NewContext(ctx, chromedp.WithDebugf(devToolHandler))
+	defer cancel()
+
+	err = chromedp.Run(ctx, network.Enable())
 	if err != nil {
 		return err
 	}
@@ -124,12 +119,12 @@ func run() error {
 	loginURL := `https://login.microsoftonline.com/%s/saml2?SAMLRequest=%s`
 	loginURL = fmt.Sprintf(loginURL, tenantID, url.QueryEscape(samlRequest))
 
-	err = c.Run(ctx, chromedp.Navigate(loginURL))
+	err = chromedp.Run(ctx, chromedp.Navigate(loginURL))
 	if err != nil {
 		return err
 	}
 
-	err = c.Run(ctx, chromedp.ActionFunc(func(_ context.Context, h cdp.Executor) error {
+	err = chromedp.Run(ctx, chromedp.ActionFunc(func(_ context.Context) error {
 		for {
 			var msg cdproto.Message
 			select {
@@ -137,7 +132,6 @@ func run() error {
 				return ctx.Err()
 			case msg = <-msgChann:
 			}
-
 			switch msg.Method.String() {
 			case "Network.requestWillBeSent":
 				var reqWillSend network.EventRequestWillBeSent
@@ -155,24 +149,14 @@ func run() error {
 				}
 				err = assumeRole(ctx, samlResponse[0], durationHours)
 				if err != nil {
-					return errors.Wrap(err, "Faled to assume role")
+					return errors.Wrap(err, "Failed to assume role")
 				}
 				return nil
 			}
 		}
 	}))
 	if err != nil {
-		return errors.Wrap(err, "Faled to handle events")
-	}
-
-	// shutdown chrome
-	if err = c.Shutdown(ctx); err != nil {
-		return errors.Wrap(err, "Faled to shutdown Chrome")
-	}
-
-	// wait for chrome to finish the shutdown
-	if err = c.Wait(); err != nil {
-		return err
+		return errors.Wrap(err, "Failed to handle events")
 	}
 	return nil
 }

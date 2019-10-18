@@ -13,7 +13,7 @@
   revision = "fb13cb52a46b55a9f20e6d497658dd494c7c1ef1"
 
 [[projects]]
-  digest = "1:eccabc7f3a02eff3a82be29a44d6bfdf2768794ba7af2683c7395411ce3b49f6"
+  digest = "1:e0bb28ebfea46a3e87a416b1b2de46ce473f701b31232f07278d58c4711e32ac"
   name = "github.com/aws/aws-sdk-go"
   packages = [
     "aws",
@@ -36,23 +36,26 @@
     "aws/signer/v4",
     "internal/ini",
     "internal/sdkio",
+    "internal/sdkmath",
     "internal/sdkrand",
     "internal/sdkuri",
     "internal/shareddefaults",
     "private/protocol",
+    "private/protocol/json/jsonutil",
     "private/protocol/query",
     "private/protocol/query/queryutil",
     "private/protocol/rest",
     "private/protocol/xml/xmlutil",
     "service/sts",
+    "service/sts/stsiface",
   ]
   pruneopts = "UT"
-  revision = "fb5f514796fc4fdc6afdcf5a675a5b2baa714b9f"
-  version = "v1.16.14"
+  revision = "adf0d7dcf139d718ab18e46f6055735a27be867a"
+  version = "v1.25.15"
 
 [[projects]]
   branch = "master"
-  digest = "1:20014bed95472b1c2cf0a46840a4d2e4c397a75c65e699792160d5b1bc661c28"
+  digest = "1:aa18644961a96c7fddd036fe054d88fb521a2e103130fdb2bdf1001fcb70372c"
   name = "github.com/chromedp/cdproto"
   packages = [
     ".",
@@ -60,8 +63,10 @@
     "animation",
     "applicationcache",
     "audits",
+    "backgroundservice",
     "browser",
     "cachestorage",
+    "cast",
     "cdp",
     "css",
     "database",
@@ -81,6 +86,7 @@
     "io",
     "layertree",
     "log",
+    "media",
     "memory",
     "network",
     "overlay",
@@ -93,15 +99,16 @@
     "storage",
     "systeminfo",
     "target",
-    "testing",
     "tethering",
     "tracing",
+    "webaudio",
+    "webauthn",
   ]
   pruneopts = "UT"
-  revision = "c09467c16a87aa901a53d69a86563cef6dbcf475"
+  revision = "ffea6b31d538a7cce876e221fa44ef4f69c9d038"
 
 [[projects]]
-  digest = "1:13e2ffaa15cf117544a44b046c0438063047ee1b963ef9312ce7758c27cdaebc"
+  digest = "1:cfd47f2036ebcec975bd79962970afd38f0270505285ef0248ce38cb01ad0fe2"
   name = "github.com/chromedp/chromedp"
   packages = [
     ".",
@@ -110,40 +117,40 @@
     "runner",
   ]
   pruneopts = "UT"
-  revision = "34591780d9d429c470ccf81a2760c40245fc823a"
-  version = "v0.1.2"
+  revision = "4cc98907450234863eb7f74e545bb6def2352720"
+  version = "v0.1.3"
 
 [[projects]]
-  digest = "1:2694597a20d303502ad1b7f1cc688977c7dc34da732ccf4d27e98b552cceed5b"
+  digest = "1:80154261f3a8bd25b0c4f229fa007ebe8f1fef3b7be9363512b0e72b1543ce70"
   name = "github.com/disintegration/imaging"
   packages = ["."]
   pruneopts = "UT"
-  revision = "0bd5694c78c9c3d9a3cd06a706a8f3c59296a9ac"
-  version = "v1.5.0"
+  revision = "9aab30e6aa535fe3337b489b76759ef97dfaf362"
+  version = "v1.6.1"
 
 [[projects]]
-  digest = "1:8b4bb15de2e698d359eeec15c42453567c98972a70c8619946050360ec02ec32"
+  digest = "1:2a2e303bb32696f9250d4ba3d8c25c7849a6bff66a13a9f9caf4f34774b5ee51"
   name = "github.com/go-ini/ini"
   packages = ["."]
   pruneopts = "UT"
-  revision = "6ed8d5f64cd79a498d1f3fab5880cc376ce41bbe"
-  version = "v1.41.0"
+  revision = "1eb383f13cde0e7be091181a93b58574638129f0"
+  version = "v1.49.0"
 
 [[projects]]
-  digest = "1:236d7e1bdb50d8f68559af37dbcf9d142d56b431c9b2176d41e2a009b664cda8"
+  digest = "1:582b704bebaa06b48c29b0cec224a6058a09c86883aaddabde889cd1a5f73e1b"
   name = "github.com/google/uuid"
   packages = ["."]
   pruneopts = "UT"
-  revision = "9b3b1e0f5f99ae461456d768e7d301a7acdaa2d8"
-  version = "v1.1.0"
+  revision = "0cd6bf5da1e1c83f8b45653022c74f71af0538a4"
+  version = "v1.1.1"
 
 [[projects]]
-  digest = "1:7b5c6e2eeaa9ae5907c391a91c132abfd5c9e8a784a341b5625e750c67e6825d"
+  digest = "1:e62657cca9badaa308d86e7716083e4c5933bb78e30a17743fc67f50be26f6f4"
   name = "github.com/gorilla/websocket"
   packages = ["."]
   pruneopts = "UT"
-  revision = "66b9c49e59c6c48f0ffce28c2d8b8a5678502c6d"
-  version = "v1.4.0"
+  revision = "c3e18be99d19e6b3e8f1559eea2c161a665c4b6b"
+  version = "v1.4.1"
 
 [[projects]]
   digest = "1:bb81097a5b62634f3e9fec1014657855610c82d19b9a40c17612e32651e35dca"
@@ -154,11 +161,11 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:caf6db28595425c0e0f2301a00257d11712f65c1878e12cffc42f6b9a9cf3f23"
+  digest = "1:f433da6fbabb0bd1bd730fd340782015c644123d02eb78c20c69ce03352daad1"
   name = "github.com/kardianos/osext"
   packages = ["."]
   pruneopts = "UT"
-  revision = "ae77be60afb1dcacde03767a8c37337fad28ac14"
+  revision = "2bc1f35cddc0cc527b4bc3dce8578fc2a6c11384"
 
 [[projects]]
   branch = "master"
@@ -170,15 +177,14 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:8cb15b21828b36ad568850d0ecb9340e22b148c8c6755f4a3d7918021bfc38a2"
+  digest = "1:5565954a979057d9bb093b1001f804d6e0ebdf3917117f3e7319b1d6f083ddc5"
   name = "github.com/knq/sysutil"
   packages = ["."]
   pruneopts = "UT"
-  revision = "f05b59f0f3075ba1bc5701ef0df4393a05ebd0e7"
+  revision = "15668db23d08158adb81783bf9e1617e7ca99c10"
 
 [[projects]]
-  branch = "master"
-  digest = "1:aa3d8d42865c42626b5c1add193692d045b3188b1479f0a0a88690d21fe20083"
+  digest = "1:891f9c13236eb1b6d1abd4fe01e6c9be51bcc65f04da0dfa4bfdf356374e98c4"
   name = "github.com/mailru/easyjson"
   packages = [
     ".",
@@ -187,15 +193,16 @@
     "jwriter",
   ]
   pruneopts = "UT"
-  revision = "60711f1a8329503b04e1c88535f419d0bb440bff"
+  revision = "1b2b06f5f209fea48ff5922d8bfb2b9ed5d8f00b"
+  version = "v0.7.0"
 
 [[projects]]
-  digest = "1:78bbb1ba5b7c3f2ed0ea1eab57bdd3859aec7e177811563edc41198a760b06af"
+  digest = "1:5d231480e1c64a726869bc4142d270184c419749d34f167646baa21008eb0a79"
   name = "github.com/mitchellh/go-homedir"
   packages = ["."]
   pruneopts = "UT"
-  revision = "ae18d6b8b3205b561c79e8e5f69bff09736185f4"
-  version = "v1.0.0"
+  revision = "af06845cf3004701891bf4fdb884bfe4920b3727"
+  version = "v1.1.0"
 
 [[projects]]
   branch = "master"
@@ -215,15 +222,16 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:acadbbf02e5c744709c60ac929e63258a69a3404ab36ed0c1a245cc28f056220"
+  digest = "1:b3710f66b926eaee90005212e4dea89f2e9b2029c542b12386216dc8ec2f83c4"
   name = "golang.org/x/image"
   packages = [
     "bmp",
+    "ccitt",
     "tiff",
     "tiff/lzw",
   ]
   pruneopts = "UT"
-  revision = "cd38e8056d9b27bb2f265effa37fb0ea6b8a7f0f"
+  revision = "e7c1f5e7dbb87d8921928a6d9fc52fb31ce73b24"
 
 [solve-meta]
   analyzer-name = "dep"
@@ -234,10 +242,8 @@
     "github.com/aws/aws-sdk-go/aws/session",
     "github.com/aws/aws-sdk-go/service/sts",
     "github.com/chromedp/cdproto",
-    "github.com/chromedp/cdproto/cdp",
     "github.com/chromedp/cdproto/network",
     "github.com/chromedp/chromedp",
-    "github.com/chromedp/chromedp/runner",
     "github.com/go-ini/ini",
     "github.com/google/uuid",
     "github.com/mitchellh/go-homedir",
