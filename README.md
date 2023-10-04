@@ -11,7 +11,7 @@ Inspired by [aws-azure-login](https://github.com/dtjohnson/aws-azure-login)
 
 ### From source
 ```
-$ go get -u github.com/knqyf263/azaws
+$ go install github.com/knqyf263/azaws@latest
 ```
 
 ### RedHat, CentOS
