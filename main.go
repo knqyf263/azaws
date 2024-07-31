@@ -135,11 +135,14 @@ func run() error {
 			switch msg.Method.String() {
 			case "Network.requestWillBeSent":
 				var reqWillSend network.EventRequestWillBeSent
-				json.Unmarshal(msg.Params, &reqWillSend)
-				if reqWillSend.Request.URL != "https://signin.aws.amazon.com/saml" {
+				if err = json.Unmarshal(msg.Params, &reqWillSend); err != nil {
+					return err
+				}
+				if reqWillSend.Request.URL != "https://signin.aws.amazon.com/saml" || !reqWillSend.Request.HasPostData ||
+					len(reqWillSend.Request.PostDataEntries) == 0 {
 					continue
 				}
-				form, err := url.ParseQuery(reqWillSend.Request.PostData)
+				form, err := url.ParseQuery(reqWillSend.Request.PostDataEntries[0].Bytes)
 				if err != nil {
 					return errors.Wrap(err, "Failed to parse query")
 				}
