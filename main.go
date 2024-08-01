@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"context"
+	"encoding/base64"
 	"encoding/json"
 	"flag"
 	"fmt"
@@ -142,7 +143,11 @@ func run() error {
 					len(reqWillSend.Request.PostDataEntries) == 0 {
 					continue
 				}
-				form, err := url.ParseQuery(reqWillSend.Request.PostDataEntries[0].Bytes)
+				dec, err := base64.StdEncoding.DecodeString(reqWillSend.Request.PostDataEntries[0].Bytes)
+				if err != nil {
+					return errors.Wrap(err, "Failed to decode post data")
+				}
+				form, err := url.ParseQuery(string(dec))
 				if err != nil {
 					return errors.Wrap(err, "Failed to parse query")
 				}
